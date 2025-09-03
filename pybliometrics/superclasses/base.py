@@ -50,8 +50,10 @@ class Base:
 
         # Check if search request
         search_request = "query" in params
+        # Check if abstract retrieval
+        ab_retrieval = (api == 'AbstractRetrieval')
         # Check if ref retrieval for abstract
-        ab_ref_retrieval = (api == 'AbstractRetrieval') and (params['view'] == 'REF')
+        ab_ref_retrieval = ab_retrieval and (params['view'] == 'REF')
         # Check if object retrieval
         obj_retrieval = (api == 'ObjectRetrieval')
 
@@ -64,7 +66,7 @@ class Base:
             elif obj_retrieval:
                 self._object = fname.read_bytes()
             else:
-                self._json = loads(fname.read_text())
+                self._xml = fname.read_text()
         else:
             resp = get_content(url, api, params, **kwds)
             header = resp.headers
@@ -118,8 +120,8 @@ class Base:
                 self._object = resp.content
                 data = []
             else:
-                data = loads(resp.text)
-                self._json = data
+                data = resp.text
+                self._xml = data
                 data = [data]
             # Set private variables
             self._mdate = time()
@@ -128,6 +130,8 @@ class Base:
             if download:
                 if obj_retrieval:
                     fname.write_bytes(self._object)
+                elif ab_retrieval:
+                    fname.write_text(self._xml)
                 else:
                     text = [dumps(item, separators=(',', ':')) for item in data]
                     fname.write_text("\n".join(text))
