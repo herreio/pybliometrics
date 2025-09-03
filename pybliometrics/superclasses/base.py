@@ -52,8 +52,6 @@ class Base:
         search_request = "query" in params
         # Check if xml request
         xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval'])
-        # Check if ref retrieval for abstract
-        ab_ref_retrieval = (api == 'AbstractRetrieval') and (params['view'] == 'REF')
         # Check if object retrieval
         obj_retrieval = (api == 'ObjectRetrieval')
 
@@ -71,12 +69,7 @@ class Base:
             resp = get_content(url, api, params, **kwds)
             header = resp.headers
 
-            if ab_ref_retrieval:
-                kwds['startref'] = '1'
-                data = _get_all_refs(url, params, verbose, resp, **kwds)
-                self._json = data
-                data = [data]
-            elif search_request:
+            if search_request:
                 # Get number of results
                 res = resp.json()
                 n = int(res['search-results'].get('opensearch:totalResults', 0) or 0)
@@ -179,39 +172,3 @@ def _check_file_age(self):
         refresh = True
         mod_ts = None
     return refresh, mod_ts
-
-
-def _get_all_refs(url: str, params: dict, verbose: bool, resp: dict, **kwds) -> dict:
-    """Get all references for `AbstractRetrieval` with view `REF`."""
-    # startref starts at 1 (0 does not work)
-    # Max refs per query are 40
-    # Use of refcount leads to errors
-    res = resp.json()
-    path_total_references = ['abstracts-retrieval-response', 'references', '@total-references']
-    try:
-        n = int(parse_content.chained_get(res, path_total_references))
-    except TypeError:
-        return res
-
-    data = res  # data is used to gather all responses. res is a tmp variable
-    path_reference = ['abstracts-retrieval-response', 'references', 'reference']
-    ref_len = len(parse_content.chained_get(data, path_reference))
-    n_chunks = ceil(n/ref_len)
-
-    for i in tqdm(range(1, n_chunks), disable=not verbose,
-                  initial=1, total=n_chunks):
-        # Increment startref
-        kwds['startref'] = str(int(kwds['startref']) + ref_len)
-        # Get
-        resp = get_content(url, 'AbstractRetrieval', params, **kwds)
-        res = resp.json()
-        res = parse_content.chained_get(res, path_reference)
-        # Append
-        data['abstracts-retrieval-response']['references']['reference'].extend(listify(res))
-        if verbose:
-            print(f'Extracted:\n\tFrom: {kwds["startref"]}\n\tTo:{len(parse_content.chained_get(data, ["abstracts-retrieval-response", "references", "reference"]))}')
-
-    if verbose:
-        print(f'Total data: {len(parse_content.chained_get(data, ["abstracts-retrieval-response", "references", "reference"]))}')
-
-    return data
