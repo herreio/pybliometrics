@@ -8,8 +8,7 @@ from typing import Optional
 from tqdm import tqdm
 
 from pybliometrics.exception import ScopusQueryError
-from pybliometrics.utils import get_content, parse_content, SEARCH_MAX_ENTRIES
-from pybliometrics.utils import listify
+from pybliometrics.utils import get_content, SEARCH_MAX_ENTRIES
 
 
 class Base:
