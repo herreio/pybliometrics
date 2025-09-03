@@ -42,7 +42,7 @@ class AffiliationRetrieval(Retrieval):
         # Checks
         check_parameter_value(view, VIEWS['AffiliationRetrieval'], "view")
 
-        # Load json
+        # Load xml
         self._view = view
         self._refresh = refresh
         aff_id = str(int(str(aff_id).split('-')[-1]))

@@ -54,7 +54,7 @@ class AbstractRetrieval(Retrieval):
             allowed_id_types = ('eid', 'pii', 'scopus_id', 'pubmed_id', 'doi')
             check_parameter_value(id_type, allowed_id_types, "id_type")
 
-        # Load json
+        # Load xml
         self._view = view
         self._refresh = refresh
         Retrieval.__init__(self, identifier=identifier, id_type=id_type, **kwds)
