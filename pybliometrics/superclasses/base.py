@@ -51,7 +51,7 @@ class Base:
         # Check if search request
         search_request = "query" in params
         # Check if xml request
-        xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval'])
+        xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval'])
         # Check if ref retrieval for abstract
         ab_ref_retrieval = (api == 'AbstractRetrieval') and (params['view'] == 'REF')
         # Check if object retrieval
