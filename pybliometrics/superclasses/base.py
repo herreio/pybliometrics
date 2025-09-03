@@ -50,10 +50,10 @@ class Base:
 
         # Check if search request
         search_request = "query" in params
-        # Check if abstract retrieval
-        ab_retrieval = (api == 'AbstractRetrieval')
+        # Check if xml request
+        xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval'])
         # Check if ref retrieval for abstract
-        ab_ref_retrieval = ab_retrieval and (params['view'] == 'REF')
+        ab_ref_retrieval = (api == 'AbstractRetrieval') and (params['view'] == 'REF')
         # Check if object retrieval
         obj_retrieval = (api == 'ObjectRetrieval')
 
@@ -130,7 +130,7 @@ class Base:
             if download:
                 if obj_retrieval:
                     fname.write_bytes(self._object)
-                elif ab_retrieval:
+                elif xml_retrieval:
                     fname.write_text(self._xml)
                 else:
                     text = [dumps(item, separators=(',', ':')) for item in data]
