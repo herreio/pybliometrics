@@ -98,7 +98,7 @@ def get_content(url, api, params=None, **kwds):
     else:
         key = keys.pop(0)
 
-    header = {'Accept': 'application/json',
+    header = {'Accept': 'application/xml',
               'User-Agent': user_agent,
               'X-ELS-APIKey': token_key or key}
 
@@ -146,15 +146,16 @@ def get_content(url, api, params=None, **kwds):
     # Eventually raise error, if possible with supplied error message
     try:
         error_type = errors[resp.status_code]
-        try:
-            reason = resp.json()['service-error']['status']['statusText']
-        except KeyError:
-            try:
-                reason = resp.json()['message']
-            except:
-                reason = ""
+        reason = str(error_type)
+        #try:
+        #    reason = resp.json()['service-error']['status']['statusText']
+        #except KeyError:
+        #    try:
+        #        reason = resp.json()['message']
+        #    except:
+        #        reason = ""
         raise error_type(reason)
-    except (JSONDecodeError, KeyError):
+    except KeyError:
         resp.raise_for_status()
     return resp
 
