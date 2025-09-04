@@ -98,7 +98,8 @@ def get_content(url, api, params=None, **kwds):
     else:
         key = keys.pop(0)
 
-    header = {'Accept': 'application/xml',
+    header = {'Accept': 'text/xml' if api in \
+                ('AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval') else "application/json",
               'User-Agent': user_agent,
               'X-ELS-APIKey': token_key or key}
 
