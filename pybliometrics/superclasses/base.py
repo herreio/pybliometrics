@@ -49,7 +49,7 @@ class Base:
 
         # Check if search request
         search_request = "query" in params
-        # Check if xml request
+        # Check if xml retrieval
         xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval'])
         # Check if object retrieval
         obj_retrieval = (api == 'ObjectRetrieval')
@@ -62,8 +62,10 @@ class Base:
                 self._n = len(self._json)
             elif obj_retrieval:
                 self._object = fname.read_bytes()
-            else:
+            elif xml_retrieval:
                 self._xml = fname.read_text()
+            else:
+                self._json = loads(fname.read_text())
         else:
             resp = get_content(url, api, params, **kwds)
             header = resp.headers
@@ -111,9 +113,12 @@ class Base:
             elif obj_retrieval:
                 self._object = resp.content
                 data = []
+            elif xml_retrieval:
+                self._xml = resp.text
+                data = []
             else:
-                data = resp.text
-                self._xml = data
+                data = loads(resp.text)
+                self._json = data
                 data = [data]
             # Set private variables
             self._mdate = time()
