@@ -162,6 +162,11 @@ APIS_WITH_ID_TYPE = {"AbstractRetrieval",
                      "ObjectMetadata",
                      "ObjectRetrieval"}
 
+# XML based APIs
+XML_APIS = {"AbstractRetrieval",
+            "AffiliationRetrieval",
+            "AuthorRetrieval"}
+
 # APIs that do not require an ID in the URL
 APIS_NO_ID_IN_URL = {"AuthorMetrics", "InstitutionLookupMetrics", "TopicLookupMetrics"}
 

@@ -6,6 +6,7 @@ from urllib3.util import Retry
 
 from pybliometrics import __version__
 from pybliometrics import exception
+from pybliometrics.utils.constants import XML_APIS
 from pybliometrics.utils.startup import get_config, get_insttokens, get_keys, _throttling_params
 
 # Define user agent string for HTTP requests
@@ -98,8 +99,7 @@ def get_content(url, api, params=None, **kwds):
     else:
         key = keys.pop(0)
 
-    header = {'Accept': 'text/xml' if api in \
-                ('AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval') else "application/json",
+    header = {'Accept': 'text/xml' if api in XML_APIS else "application/json",
               'User-Agent': user_agent,
               'X-ELS-APIKey': token_key or key}
 

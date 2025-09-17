@@ -8,7 +8,7 @@ from typing import Optional
 from tqdm import tqdm
 
 from pybliometrics.exception import ScopusQueryError
-from pybliometrics.utils import get_content, SEARCH_MAX_ENTRIES
+from pybliometrics.utils import get_content, SEARCH_MAX_ENTRIES, XML_APIS
 
 
 class Base:
@@ -50,7 +50,7 @@ class Base:
         # Check if search request
         search_request = "query" in params
         # Check if xml retrieval
-        xml_retrieval = (api in ['AbstractRetrieval', 'AffiliationRetrieval', 'AuthorRetrieval'])
+        xml_retrieval = (api in XML_APIS)
         # Check if object retrieval
         obj_retrieval = (api == 'ObjectRetrieval')
 
