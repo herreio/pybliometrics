@@ -4,6 +4,10 @@ Change Log
 
 .. toctree::
 
+4.3+x.0
+~~~~~~~
+* Switch to retrieve XML for `scopus.AbstractRetrieval()`, `AffiliationRetrieval()` and `AuthorRetrieval()`.
+
 4.3
 ~~~
 
